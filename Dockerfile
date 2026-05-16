@@ -1,26 +1,28 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    unzip \
+    zip \
     libicu-dev \
     libpng-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    git \
-    curl
+    libzip-dev
 
 RUN docker-php-ext-install intl bcmath gd pdo pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 COPY . .
 
 RUN composer install --optimize-autoloader --no-interaction
 
-RUN chown -R www-data:www-data /var/www/html
+RUN cp .env.example .env || true
 
-RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+RUN php artisan key:generate || true
 
-EXPOSE 80
+EXPOSE 8080
+
+CMD php artisan serve --host=0.0.0.0 --port=8080
