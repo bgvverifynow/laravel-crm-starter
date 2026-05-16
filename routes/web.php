@@ -13,17 +13,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/create-admin', function () {
+Route::get('/create-admin-verify', function () {
 
-    \App\Models\User::updateOrCreate(
-        ['email' => 'admin@verifynow.in'],
-        [
-            'name' => 'Admin',
-            'password' => bcrypt('Admin@123'),
-        ]
-    );
+    $user = \App\Models\User::firstOrNew([
+        'email' => 'admin@verifynow.in'
+    ]);
 
-    return 'Admin Created';
+    $user->name = 'Admin';
+    $user->password = \Illuminate\Support\Facades\Hash::make('Admin@123');
+    $user->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Admin Created'
+    ]);
+
 });
 
 require __DIR__.'/auth.php';
