@@ -1,14 +1,17 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
+    apache2 \
+    libapache2-mod-php \
     libicu-dev \
     libpng-dev \
     libzip-dev \
     zip \
     unzip \
     git \
-    curl \
-    && docker-php-ext-install intl bcmath gd pdo pdo_mysql
+    curl
+
+RUN docker-php-ext-install intl bcmath gd pdo pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -23,3 +26,5 @@ RUN a2enmod rewrite
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
