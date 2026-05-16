@@ -1,36 +1,76 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
 
-        <!-- Fonts -->
-        <script src="https://kit.fontawesome.com/489f6ee958.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <title>{{ config('app.name', 'Laravel CRM') }}</title>
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/489f6ee958.js" crossorigin="anonymous"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #f5f7fb;
+        }
+
+        .navbar-custom {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 20px;
+        }
+
+        .page-container {
+            padding: 30px;
+        }
+
+        .card-custom {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    @include('layouts.navigation')
+
+    <div class="container-fluid page-container">
+
+        <!-- Page Heading -->
+        @if (isset($header))
+            <div class="card-custom mb-4">
+                {{ $header }}
+            </div>
+        @endif
+
+        <!-- Main Content -->
+        <div class="card-custom">
+            {{ $slot }}
         </div>
-    </body>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
 </html>
