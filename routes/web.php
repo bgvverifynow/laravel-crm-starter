@@ -13,20 +13,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/create-admin-verify', function () {
+Route::get('/make-super-admin', function () {
 
-    $user = \App\Models\User::firstOrNew([
-        'email' => 'admin@verifynow.in'
+    $user = \App\Models\User::where('email', 'admin@verifynow.in')->first();
+
+    if (!$user) {
+        return 'User not found';
+    }
+
+    // Create role if missing
+    $role = \Spatie\Permission\Models\Role::firstOrCreate([
+        'name' => 'Super Admin',
+        'guard_name' => 'web'
     ]);
 
-    $user->name = 'Admin';
-    $user->password = \Illuminate\Support\Facades\Hash::make('Admin@123');
-    $user->save();
+    // Assign role
+    $user->assignRole($role);
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Admin Created'
-    ]);
+    return 'Super Admin Assigned';
 
 });
 
