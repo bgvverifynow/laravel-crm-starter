@@ -18,8 +18,8 @@ COPY . .
 
 RUN composer install --optimize-autoloader --no-interaction
 
+RUN a2enmod rewrite
+
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
-
-CMD ["apache2-foreground"]
