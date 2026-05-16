@@ -1,8 +1,6 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
-    apache2 \
-    libapache2-mod-php \
     libicu-dev \
     libpng-dev \
     libzip-dev \
@@ -15,16 +13,16 @@ RUN docker-php-ext-install intl bcmath gd pdo pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN a2enmod rewrite
+
 WORKDIR /var/www/html
 
 COPY . .
 
 RUN composer install --optimize-autoloader --no-interaction
 
-RUN a2enmod rewrite
-
 RUN chown -R www-data:www-data /var/www/html
 
-EXPOSE 80
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
-CMD ["apachectl", "-D", "FOREGROUND"]
+EXPOSE 80
